@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación para {{ invitado.nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <video id="bg-video" class="bg-video" autoplay muted playsinline>
+        <source src="{{ url_for('static', filename='inv1.mp4') }}" type="video/mp4">
+    </video>
+
+    <div class="envelope-body">
+        <div class="envelope-container" onclick="abrirSobre('{{ invitado.token }}')">
+            <div class="envelope">
+                <div class="flap"></div>
+                <div class="front">
+                    <p class="guest-name">Para:<br>{{ invitado.nombre }}</p>
+                    <p class="tap-text">Toca para abrir</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

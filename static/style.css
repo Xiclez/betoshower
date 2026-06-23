@@ -1,0 +1,273 @@
+/* Importar fuentes elegantes (Cursiva para nombres/títulos y Montserrat para lectura) */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;600&display=swap');
+
+/* ==================== BASE ==================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: #5C4044;
+    overflow-x: hidden;
+    background: transparent; /* El fondo ahora es el video */
+}
+
+/* ==================== VIDEO DE FONDO ==================== */
+.bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover; /* Garantiza que el video 9:16 cubra toda la pantalla sin deformarse */
+    z-index: -1;
+}
+
+/* ==================== ANIMACIÓN DEL SOBRE (Página Inicial) ==================== */
+.envelope-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: transparent;
+}
+
+.envelope-container {
+    cursor: pointer;
+    perspective: 1000px;
+}
+
+.envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background: #FFFFFF;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transition: transform 0.8s ease-in-out;
+}
+
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 100px solid #F4C2C2;
+    transform-origin: top;
+    transition: transform 0.6s ease-in-out;
+    z-index: 2;
+}
+
+.front {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+.guest-name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 40px;
+    color: #8A5A65;
+}
+
+.tap-text {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    margin-top: 10px;
+    animation: pulse 1.5s infinite;
+    color: #5C4044;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* Clases activas cuando se hace clic en el sobre */
+.envelope.open .flap {
+    transform: rotateX(180deg);
+}
+
+.envelope.open {
+    transform: translateY(50px) scale(0.9);
+    opacity: 0;
+}
+
+/* ==================== INVITACIÓN Y ZONAS SEGURAS ==================== */
+.invitation-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px;
+    /* Margen superior para evitar pisar las flores del video */
+    padding-top: 18vh;
+    /* Margen inferior para evitar pisar al conejo del video */
+    padding-bottom: 25vh;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+/* Animación Parallax al hacer scroll */
+.parallax {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    margin-bottom: 50px;
+}
+
+.parallax.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ==================== TEXTOS ==================== */
+/* Sombra blanca suave para resaltar sobre el video de fondo */
+.title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3.5rem;
+    color: #D47395;
+    margin: 15px 0;
+    text-shadow: 0px 2px 10px rgba(255,255,255,0.8);
+}
+
+.subtitle {
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8A5A65;
+    line-height: 1.5;
+    text-shadow: 0px 1px 5px rgba(255,255,255,0.8);
+}
+
+.footer-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3rem;
+    color: #D47395;
+    margin-top: 30px;
+    text-shadow: 0px 2px 10px rgba(255,255,255,0.8);
+}
+
+/* ==================== CAJAS DE CONTENIDO (GLASSMORPHISM) ==================== */
+.date-box {
+    border: 2px solid rgba(212, 115, 149, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
+}
+
+.date-box h2 {
+    font-size: 3.5rem;
+    color: #D47395;
+    margin: 5px 0;
+    font-family: 'Dancing Script', cursive;
+}
+
+.time {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #8A5A65;
+    text-shadow: 0px 1px 5px rgba(255,255,255,0.8);
+}
+
+.gift-box {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    margin-top: 15px;
+    border: 1px solid rgba(244, 194, 194, 0.5);
+}
+
+.gift-box p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    color: #5C4044;
+}
+
+/* ==================== VIDEO AUTOHOSPEDADO (INDICACIONES) ==================== */
+.video-container {
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 1px solid rgba(250, 218, 221, 0.6);
+}
+
+.video-title {
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #8A5A65;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.self-hosted-video {
+    width: 100%;
+    border-radius: 10px;
+    outline: none;
+    background: #000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* ==================== BOTONES ==================== */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 25px;
+    text-decoration: none;
+    color: white;
+    background: #D47395;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: #8A5A65;
+}
+
+.btn-success {
+    background: #A3B18A;
+    cursor: default;
+}
+
+.btn:hover {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+}
+
+/* ==================== ADMIN PANEL ==================== */
+.confirmado {
+    color: green;
+    font-weight: bold;
+}
+
+.pendiente {
+    color: red;
+}

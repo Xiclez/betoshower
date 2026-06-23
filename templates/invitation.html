@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Shower Madeleine Estrella</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <video id="bg-video" class="bg-video" autoplay muted playsinline>
+        <source src="{{ url_for('static', filename='inv2.mp4') }}" type="video/mp4">
+    </video>
+
+    <div class="invitation-container">
+        <section class="parallax header-section">
+            <h3 class="subtitle">Te invitamos a celebrar la llegada<br>de nuestra princesa</h3>
+            <h1 class="title">Madeleine Estrella</h1>
+        </section>
+
+        <section class="parallax date-section">
+            <h3 class="subtitle">Acompáñanos el día</h3>
+            <div class="date-box">
+                <p>DOMINGO</p>
+                <h2>26</h2>
+                <p>DE JULIO 2026</p>
+            </div>
+            <p class="time">5:00 PM a 10:00 PM</p>
+        </section>
+
+        <section class="parallax location-section">
+            <h3>Granja ISLA JOYA</h3>
+            <a href="https://maps.google.com/?q=Granja+Isla+Joya+Chihuahua" target="_blank" class="btn">📍 Abrir en Maps</a>
+            
+            <div class="video-container">
+                <p class="video-title">🎥 Indicaciones para llegar</p>
+                <video controls class="self-hosted-video" preload="metadata">
+                    <source src="{{ url_for('static', filename='indicaciones.mp4') }}" type="video/mp4">
+                    Tu navegador no soporta la reproducción de video.
+                </video>
+            </div>
+        </section>
+
+        <section class="parallax gifts-section">
+            <h3>Sugerencia de Regalo</h3>
+            <div class="gift-box">
+                <p><strong>👩 Mujeres:</strong> Regalo 🎁</p>
+                <p><strong>👨 Hombres:</strong> Efectivo en sobre 💵</p>
+            </div>
+        </section>
+
+        <section class="parallax rsvp-section">
+            <h3>Para: {{ invitado.nombre }}</h3>
+            <p class="subtitle" style="margin-bottom: 15px;">Confirmar Asistencia</p>
+            {% if invitado.confirmado %}
+                <button class="btn btn-success" disabled>✅ Asistencia Confirmada</button>
+            {% else %}
+                <button id="btn-confirmar" class="btn btn-primary" onclick="confirmarAsistencia('{{ invitado.token }}')">Confirmar Asistencia</button>
+            {% endif %}
+            
+            <h2 class="footer-text">¡Te esperamos!</h2>
+        </section>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
