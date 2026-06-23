@@ -4,28 +4,82 @@
     <meta charset="UTF-8">
     <title>Admin - Baby Shower Madeleine</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        button { padding: 10px 15px; background: #d4a373; color: white; border: none; cursor: pointer; }
-        .confirmado { color: green; font-weight: bold; }
-.pendiente { color: red; }
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { color: #5c4a3d; margin-top: 0; }
+        
+        /* Formulario */
+        .form-group { display: flex; gap: 10px; margin-bottom: 25px; }
+        input[type="text"] { padding: 12px; width: 60%; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+        button.btn-main { padding: 12px 20px; background: #d4a373; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 16px; font-weight: bold; transition: background 0.3s; }
+        button.btn-main:hover { background: #b58b60; }
+        
+        /* Tabla */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; vertical-align: middle; }
+        th { background-color: #f9f9f9; color: #5c4a3d; }
+        
+        /* Estados */
+        .confirmado { color: #2e7d32; font-weight: bold; }
+        .pendiente { color: #c62828; }
+
+        /* Botones de Acción (Íconos) */
+        .actions-container { display: flex; gap: 10px; align-items: center; }
+        .icon-btn { 
+            background: none; 
+            border: none; 
+            cursor: pointer; 
+            color: #5c4a3d; 
+            padding: 6px; 
+            border-radius: 4px; 
+            transition: background 0.2s, color 0.2s; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .icon-btn:hover { background: #f0f0f0; color: #d4a373; }
+        .icon-btn svg { width: 22px; height: 22px; fill: currentColor; }
+
+        /* Notificación Toast */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #3a5a40; /* Verde oscuro acorde a la paleta */
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body>
+
     <div class="container">
         <h2>Panel de Invitaciones</h2>
-        <form method="POST">
-            <input type="text" name="nombre" placeholder="Nombre de Familia o Invitado" required style="padding: 10px; width: 60%;">
-            <button type="submit">Generar Invitación</button>
+        
+        <form method="POST" class="form-group">
+            <input type="text" name="nombre" placeholder="Nombre de Familia o Invitado" required autocomplete="off">
+            <button type="submit" class="btn-main">+ Generar Invitación</button>
         </form>
 
         <table>
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Link Único</th>
+                    <th>Nombre del Invitado</th>
+                    <th>Enlace Único</th>
                     <th>Estado</th>
                 </tr>
             </thead>
@@ -33,14 +87,49 @@
                 {% for inv in invitados %}
                 <tr>
                     <td>{{ inv.nombre }}</td>
-                    <td><a href="/invitacion/{{ inv.token }}" target="_blank">Abrir Link</a></td>
+                    <td>
+                        <div class="actions-container">
+                            <a href="/invitacion/{{ inv.token }}" target="_blank" class="icon-btn" title="Abrir invitación">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+                                </svg>
+                            </a>
+                            
+                            <button onclick="copiarEnlace('{{ request.host_url }}invitacion/{{ inv.token }}')" class="icon-btn" title="Copiar enlace">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
                     <td class="{{ 'confirmado' if inv.confirmado else 'pendiente' }}">
-    {{ "Confirmado" if inv.confirmado else "Pendiente" }}
-</td>
+                        {{ "Confirmado" if inv.confirmado else "Pendiente" }}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <div id="toast">Enlace de invitación copiado, envíaselo a tu invitado ✨</div>
+
+    <script>
+        function copiarEnlace(url) {
+            // Usa el API de Clipboard del navegador
+            navigator.clipboard.writeText(url).then(() => {
+                const toast = document.getElementById("toast");
+                toast.classList.add("show");
+                
+                // Ocultar el toast después de 3 segundos
+                setTimeout(() => {
+                    toast.classList.remove("show");
+                }, 3000);
+            }).catch(err => {
+                console.error('Error al copiar al portapapeles: ', err);
+                alert("Hubo un error al copiar el enlace. Intenta copiarlo manualmente.");
+            });
+        }
+    </script>
+
 </body>
 </html>
