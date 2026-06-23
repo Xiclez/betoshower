@@ -115,19 +115,52 @@
 
     <script>
         function copiarEnlace(url) {
-            // Usa el API de Clipboard del navegador
-            navigator.clipboard.writeText(url).then(() => {
-                const toast = document.getElementById("toast");
-                toast.classList.add("show");
-                
-                // Ocultar el toast después de 3 segundos
-                setTimeout(() => {
-                    toast.classList.remove("show");
-                }, 3000);
-            }).catch(err => {
-                console.error('Error al copiar al portapapeles: ', err);
-                alert("Hubo un error al copiar el enlace. Intenta copiarlo manualmente.");
-            });
+            // Plan A: Navegadores modernos con HTTPS o localhost
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url)
+                    .then(mostrarToast)
+                    .catch(err => fallbackCopiar(url));
+            } else {
+                // Plan B: Conexiones HTTP normales (IPs locales, red LAN)
+                fallbackCopiar(url);
+            }
+        }
+
+        function fallbackCopiar(texto) {
+            // Creamos una caja de texto invisible
+            const textArea = document.createElement("textarea");
+            textArea.value = texto;
+            
+            // La escondemos arriba a la izquierda para que no mueva la pantalla
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.opacity = "0";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const exitoso = document.execCommand('copy');
+                if (exitoso) {
+                    mostrarToast();
+                } else {
+                    prompt("Tu navegador bloqueó el copiado automático. Copia el enlace aquí:", texto);
+                }
+            } catch (err) {
+                prompt("Tu navegador bloqueó el copiado automático. Copia el enlace aquí:", texto);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function mostrarToast() {
+            const toast = document.getElementById("toast");
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
         }
     </script>
 
