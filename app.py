@@ -5,7 +5,21 @@ import os
 
 app = Flask(__name__)
 # Base de datos SQLite en la misma carpeta
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///invitados.db'
+database_url = os.environ.get(
+    "DATABASE_URL",
+    "sqlite:///invitados.db"
+)
+
+# Some providers still return postgres:// instead of postgresql://
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace(
+        "postgres://",
+        "postgresql://",
+        1
+    )
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -55,5 +69,6 @@ def confirmar(token):
     db.session.commit()
     return jsonify({"success": True})
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=7007)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", "7007"))
+    app.run(host="0.0.0.0", port=port)
